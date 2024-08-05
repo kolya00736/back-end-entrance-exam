@@ -8,34 +8,52 @@
 ## Требования
 
 1. Работоспособность приложения.
-
-### Дополнительные пункты
-
 2. Покрытие API документацией с помощью Swagger.
 3. Построение архитектуры проекта с делением его на слои.
 
-## Инструменты для проверки качества кода
+## Выбранный API
 
-1. [ESLint](https://eslint.org/) - инструмент для проверки и исправления проблем в коде на основе настраиваемых правил.
-2. [Prettier](https://prettier.io/) - инструмент для форматирования кода согласно стандартам и кодстайлу.
+Для реализации выбран [VirusTotal API](https://docs.virustotal.com/reference/overview), который позволяет получать отчет об анализе файла по хешу (md5, sha1, sha256) или URL-адресу, созданный более чем 70 антивирусными продуктами.
 
+## API Endpoints
 
-## Порядок выполнения
+__Main Page__
+- `GET /`: Returns a JSON message about the workability of the our API.
 
-1. Изучите список доступных API и выберите одно из них для реализации кеша.
-2. Форкните данный репозиторий с заготовкой проекта, и создайте новый проект на Node.js с использованием Express в своем форкнутом репозитории, развивая имеющуюся заготовку.
-3. Реализуйте in-memory кеш с методами для проверки наличия данных, добавления новых данных, очистки кеша и изменения размера кеша.
-4. Разработайте API-маршруты для поддержки кеша: получение данных с проверкой наличия в кеше, обновление данных, очистка кеша и изменение размера кеша.
-5. (Дополнительно) Реализуйте поддержку документации для вашего API с помощью Swagger.
-6. (Дополнительно) Организуйте проект таким образом, чтобы соблюдалась архитектура с делением на слои.
-7. Предоставьте ссылку на форкнутый репозиторий.
+__Swagger Documentation__
 
-## Оценка
+- `GET /docs`: Returns a swagger documentation page.
 
-Ваша работа будет оцениваться по следующим критериям:
+__VirusTotal API__
 
-1. Работоспособность вашего приложения и корректное выполнение всех требуемых функций кеша.
-2. (Дополнительно) Качество документации API с использованием Swagger: полнота и ясность описания всех маршрутов и параметров.
-3. (Дополнительно) Архитектура проекта и деление на слои: организация кода, модульность и четкое разделение функций между различными частями приложения.
+- `GET /api/cache/files/{id}`: Get file report from cache or external API.
 
-Мы желаем вам успехов в выполнении задания и рады будем видеть вас в числе наших студентов!
+For example use hash of [EICAR-Test-File](https://ru.wikipedia.org/wiki/EICAR-Test-File): ```275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f```
+
+- `GET /api/cache/urls?url=<url>`: Get URL report from cache or external API.
+
+For example: ```https://example.com```
+
+__Cache API__
+
+- `POST /api/cache/{type}/{id}`: Add data to cache.
+
+- `DELETE /api/cache`: Delete all cached data.
+
+- `POST /api/cache/size`: Set the maximum size of the cache (Default is 50).
+
+## API Key
+
+Change `'your-api-key'` in `config/config.js` file with your API Key from [VirusTotal API](https://docs.virustotal.com/reference/authentication) or use environment variable:
+
+```
+module.exports = {
+  ...
+  apiKey: process.env.API_KEY || 'your-api-key',
+  ...
+};
+```
+My API Key:
+```
+e953cda1a3e43bf2a0c9114ab9bfc10838766554633ec38854c309abd66cc52f
+```
